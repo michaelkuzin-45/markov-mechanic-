@@ -1,0 +1,42 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100svh;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: calc(var(--header-height) + 3rem) var(--gutter) 4rem;
+  background:
+    radial-gradient(60% 50% at 85% 20%, rgba(225, 6, 0, 0.12), transparent 70%);
+}
+
+.eyebrow {
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-widest);
+  color: var(--color-accent-bright);
+}
+
+.title {
+  margin-top: 1rem;
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 1rem + 8vw, 7.5rem);
+  font-weight: 800;
+  font-stretch: 118%;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.note {
+  margin-top: 1.5rem;
+  color: var(--color-text-muted);
+}
+
+.back {
+  align-self: flex-start;
+  margin-top: 2.5rem;
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--color-accent);
+  padding-bottom: 0.25rem;
+}

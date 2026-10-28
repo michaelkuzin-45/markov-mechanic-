@@ -1,0 +1,36 @@
+node_modules
+dist
+dist-ssr
+*.local
+*.tsbuildinfo
+.vite
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editor
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+
+# Blender auto-backups
+*.blend1
+
+# Render staging (production frames are copied to public/hero/)
+blender/renders/
+# Regenerable uncompressed export (export_glb.py)
+blender/exports/markov_car.glb
+
+# Claude Code: per-machine settings and Playwright MCP session output
+.claude/settings.local.json
+.playwright-mcp/
+
+# User-supplied model downloads (source of markov-gallardo.blend)
+assets/car-models/
+
+# Secrets
+.env
+.env.*
+!.env.example

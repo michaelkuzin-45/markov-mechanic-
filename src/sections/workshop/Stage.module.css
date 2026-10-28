@@ -1,0 +1,547 @@
+/*
+ * Workshop, first screen: the car and the list of parts we look at.
+ * Voice: an inspection sheet. Sentence-case Archivo, hairline rules, red only for state.
+ */
+.stage {
+  --copy-width: 32rem;
+  --edge: max(var(--gutter), calc((100vw - var(--max-width)) / 2 + var(--gutter)));
+  position: relative;
+  isolation: isolate;
+  min-height: max(38rem, 100svh);
+  padding-top: var(--header-height);
+  background: #060607;
+  overflow: clip; /* not hidden: that would stop the picture sticking on the stacked layout */
+}
+
+/* --- Picture ---------------------------------------------------------------- */
+.media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.stillLayer,
+.canvasLayer {
+  position: absolute;
+  inset: 0;
+}
+
+.stillLayer {
+  transition: opacity 0.7s ease;
+}
+
+.stillLayer[data-hidden] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.canvasLayer {
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.canvasLayer[data-ready] {
+  opacity: 1;
+}
+
+.stills {
+  position: absolute;
+  inset: 0;
+}
+
+.still {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: 50% 50%;
+  opacity: 0;
+  transition: opacity 0.7s ease;
+}
+
+.still[data-active] {
+  opacity: 1;
+}
+
+.scrim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(6, 6, 7, 0.95) 0%, rgba(6, 6, 7, 0.86) 28%, rgba(6, 6, 7, 0.4) 40%, rgba(6, 6, 7, 0) 58%),
+    linear-gradient(0deg, rgba(6, 6, 7, 0.85) 0%, rgba(6, 6, 7, 0) 28%);
+}
+
+/* --- Hotspot markers over the live car -------------------------------------- */
+.markers {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.marker {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 44px;
+  height: 44px;
+  margin: -22px 0 0 -22px;
+  pointer-events: auto;
+  opacity: 1;
+  transition: opacity 0.2s ease;
+  will-change: transform;
+}
+
+.marker[data-hidden='true'] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.markerDot {
+  position: absolute;
+  inset: 11px;
+  border: 1.5px solid rgba(242, 240, 237, 0.85);
+  border-radius: 50%;
+  background: rgba(6, 6, 7, 0.35);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.markerDot::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  background: var(--color-accent-bright);
+  box-shadow: 0 0 10px var(--color-accent-glow);
+}
+
+.marker:hover .markerDot,
+.marker[data-active] .markerDot {
+  transform: scale(1.25);
+  border-color: #fff;
+}
+
+.markerLabel {
+  position: absolute;
+  left: calc(100% - 6px);
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 0.25rem 0.55rem;
+  background: rgba(6, 6, 7, 0.82);
+  border-left: 2px solid var(--color-accent);
+  font-size: var(--text-xs);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.marker:hover .markerLabel,
+.marker[data-active] .markerLabel {
+  opacity: 1;
+}
+
+.marker[data-flip='true'] .markerLabel {
+  left: auto;
+  right: calc(100% - 6px);
+  border-left: 0;
+  border-right: 2px solid var(--color-accent);
+}
+
+/* --- Text column ------------------------------------------------------------ */
+.copy {
+  position: relative;
+  z-index: 2;
+  width: min(var(--copy-width), 100%);
+  max-height: calc(100svh - var(--header-height));
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.22) transparent;
+  padding: clamp(1.25rem, 4vh, 2.5rem) 0 2.5rem var(--edge);
+  padding-right: 1rem;
+}
+
+/* Laptop-height screens: keep the whole parts list on screen by dropping the long intro (the same wording is under "Cars we work on"). */
+@media (min-width: 960px) and (max-height: 820px) {
+  .title {
+    font-size: clamp(2.6rem, 1rem + 3.4vw, 3.9rem);
+  }
+
+  .introInner .body {
+    display: none;
+  }
+
+  .intro {
+    margin-top: 1rem;
+  }
+
+  /* With a part open, everything it needs (the engine photo and its caption) must fit without an inner scroll. */
+  .stage[data-compact] .place,
+  .stage[data-compact] .listTitle {
+    display: none;
+  }
+
+  .stage[data-compact] .copy {
+    padding-top: 0.9rem;
+  }
+
+  .photoCard img {
+    max-height: 8rem;
+    object-fit: cover;
+  }
+}
+
+.title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-stretch: 108%;
+  font-size: clamp(2.8rem, 1.2rem + 4.2vw, 4.9rem);
+  line-height: 0.92;
+  letter-spacing: -0.035em;
+  transition: font-size 0.45s var(--ease-out-expo);
+}
+
+/* With a part open the column has to hold more, so the title steps down. */
+.stage[data-compact] .title {
+  font-size: clamp(2.4rem, 1.2rem + 2.4vw, 3.4rem);
+}
+
+.stage[data-compact] .listTitle {
+  margin-top: 1rem;
+}
+
+.stage[data-compact] .rowButton {
+  padding: 0.65rem 0;
+}
+
+.place {
+  margin-top: 0.55rem;
+  font-size: var(--text-lg);
+  color: var(--color-text-muted);
+}
+
+.intro {
+  display: grid;
+  grid-template-rows: 1fr;
+  margin-top: 1.4rem;
+  transition: grid-template-rows 0.45s var(--ease-out-expo), opacity 0.3s ease;
+}
+
+.intro[data-collapsed] {
+  grid-template-rows: 0fr;
+  opacity: 0;
+}
+
+.introInner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.statement {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-stretch: 100%;
+  font-size: 1.2rem;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  margin-bottom: 0.9rem;
+}
+
+.body {
+  max-width: 56ch;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--color-text-muted);
+}
+
+.introInner .body + .body {
+  margin-top: 0.7rem;
+}
+
+.listTitle {
+  margin: 1.75rem 0 0.5rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-stretch: 100%;
+  font-size: 1rem;
+  letter-spacing: 0;
+  color: var(--color-text-muted);
+}
+
+/* --- Parts list (accordion) ------------------------------------------------- */
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  position: relative;
+  border-top: 1px solid var(--color-border);
+}
+
+.row:last-child {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.row::before {
+  content: '';
+  position: absolute;
+  left: -0.9rem;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--color-accent);
+  box-shadow: 0 0 12px var(--color-accent-glow);
+  transform: scaleY(0);
+  transition: transform 0.35s var(--ease-out-expo);
+}
+
+.row[data-open]::before {
+  transform: scaleY(1);
+}
+
+.rowButton {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: baseline;
+  gap: 1rem;
+  width: 100%;
+  padding: 0.85rem 0;
+  text-align: left;
+}
+
+.rowTitle {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-stretch: 100%;
+  font-size: 1.3rem;
+  letter-spacing: -0.015em;
+  color: var(--color-text-muted);
+  transition: color 0.2s ease;
+}
+
+.rowButton:hover .rowTitle,
+.row[data-open] .rowTitle {
+  color: var(--color-text);
+}
+
+.rowService {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+.panel:not([hidden]) .panelInner {
+  animation: panelIn 0.4s var(--ease-out-expo);
+}
+
+.panelInner {
+  padding: 0 0 1.1rem;
+}
+
+@keyframes panelIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+.tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  margin-top: 0.9rem;
+}
+
+.slider {
+  display: grid;
+  gap: 0.35rem;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.slider input {
+  width: 11rem;
+  accent-color: var(--color-accent-bright);
+}
+
+.toolButton,
+.control {
+  padding: 0.5rem 0.85rem;
+  border: 1px solid var(--color-border);
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  background: rgba(6, 6, 7, 0.55);
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.toolButton:hover,
+.control:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.toolButton[data-on],
+.control[aria-pressed='true'] {
+  border-color: var(--color-accent);
+  background: rgba(225, 6, 0, 0.12);
+}
+
+.photoCard {
+  margin: 0.9rem 0 0;
+}
+
+.photoCard img {
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--color-border);
+}
+
+.photoCard figcaption {
+  margin-top: 0.55rem;
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+.note {
+  margin-top: 1.1rem;
+  max-width: 44ch;
+  font-size: var(--text-xs);
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+/* --- Controls over the picture ---------------------------------------------- */
+.controls {
+  position: absolute;
+  z-index: 3;
+  right: var(--edge);
+  bottom: 1.25rem;
+  display: grid;
+  justify-items: end;
+  gap: 0.6rem;
+}
+
+.hint {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.hint:empty,
+.status:empty {
+  display: none;
+}
+
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.status {
+  max-width: 28rem;
+  text-align: right;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+/* --- Tablet and phone: picture on top, then the text ------------------------ */
+@media (max-width: 959px) {
+  .stage {
+    --edge: var(--gutter);
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .copy {
+    display: contents;
+  }
+
+  .head {
+    order: 0;
+    padding: 1.1rem var(--gutter) 0;
+  }
+
+  /* The picture stays under the header while the parts list scrolls past it, so a tap is always seen. */
+  .media {
+    position: sticky;
+    top: var(--header-height);
+    z-index: 5;
+    inset-inline: auto;
+    inset-block-end: auto;
+    order: 1;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    min-height: 15rem;
+    max-height: 34rem;
+    margin-top: 0.75rem;
+    background: #060607;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .controls {
+    position: static;
+    order: 2;
+    justify-items: start;
+    padding: 0.5rem var(--gutter) 0;
+  }
+
+  .buttons {
+    justify-content: flex-start;
+  }
+
+  .status {
+    text-align: left;
+  }
+
+  .intro {
+    order: 3;
+    padding: 0 var(--gutter);
+  }
+
+  .listTitle {
+    order: 4;
+    padding: 0 var(--gutter);
+  }
+
+  .list {
+    order: 5;
+    margin: 0 var(--gutter);
+  }
+
+  .note {
+    order: 6;
+    padding: 0 var(--gutter);
+    margin: 1.1rem 0 2.5rem;
+  }
+
+  .row::before {
+    left: -0.6rem;
+  }
+
+  .scrim {
+    background: linear-gradient(0deg, rgba(6, 6, 7, 0.55) 0%, rgba(6, 6, 7, 0) 25%);
+  }
+
+  /* The renders put the car right of centre (room for the text column); crop to it, and soften the top and bottom edges. */
+  .stills {
+    -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 10%, #000 90%, transparent 100%);
+    mask-image: linear-gradient(180deg, transparent 0%, #000 10%, #000 90%, transparent 100%);
+  }
+
+  .still {
+    object-fit: cover;
+    object-position: 63% 56%;
+  }
+}
+
+@media (max-width: 720px) {
+  .rowTitle {
+    font-size: 1.2rem;
+  }
+}

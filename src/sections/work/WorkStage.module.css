@@ -1,0 +1,298 @@
+.stage {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  min-height: max(38rem, 100svh);
+  padding: calc(var(--header-height) + 1rem) var(--gutter) clamp(1.5rem, 4svh, 3rem);
+  background: radial-gradient(ellipse at 50% 38%, #0f1218 0%, #060607 70%);
+  overflow: clip;
+}
+
+/* --- Cinematic layer (WebGL canvas behind the real HTML text) ------------------------ */
+.stage[data-cinema] {
+  background: #060607;
+}
+
+.canvasWrap {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+
+.canvasWrap[data-ready] {
+  opacity: 1;
+}
+
+/* A soft vignette over the canvas keeps the edges of the shot dark and the text legible. */
+.stage[data-cinema]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 42%, transparent 52%, rgba(0, 0, 0, 0.6) 100%),
+    linear-gradient(to top, rgba(6, 6, 7, 0.78), transparent 34%);
+}
+
+.hint {
+  position: absolute;
+  left: var(--gutter);
+  right: var(--gutter);
+  bottom: clamp(1.5rem, 4svh, 3rem);
+  z-index: 2;
+  display: grid;
+  gap: 0.35rem;
+  max-width: 34rem;
+  pointer-events: none;
+  /* Held while the word sits still and the camera begins to move, then gone before the word is reached. */
+  opacity: clamp(0, calc(1 - (var(--u, 0) - 0.03) * 14), 1);
+}
+
+.tagline {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-stretch: 100%;
+  font-size: clamp(1.35rem, 1rem + 1.2vw, 2rem);
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+}
+
+.note {
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+.loading {
+  color: var(--color-text-muted);
+}
+
+.skip {
+  position: absolute;
+  right: var(--gutter);
+  bottom: clamp(1.5rem, 4svh, 3rem);
+  z-index: 3;
+  min-height: 3rem;
+  padding: 0 1.4rem;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(6, 6, 7, 0.4);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: background 0.2s ease, border-color 0.2s ease, opacity 0.4s ease;
+}
+
+.skip:hover:not(:disabled) {
+  background: rgba(225, 6, 0, 0.18);
+  border-color: var(--color-accent);
+}
+
+.skip:disabled {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.replay {
+  align-self: center;
+  margin-right: 0.75rem;
+  padding: 0.5rem 0.25rem;
+  font-size: var(--text-sm);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  transition: color 0.2s ease;
+}
+
+.replay:hover {
+  color: var(--color-text);
+}
+
+/* --- Photograph ---------------------------------------------------------------------- */
+.media {
+  position: relative;
+  container-type: size;
+  min-height: 14rem;
+  touch-action: pan-y;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  transition: opacity 0.8s ease, transform 1.1s var(--ease-out-expo);
+}
+
+.slide[data-pos='current'] {
+  opacity: 1;
+}
+
+.slide:not([data-pos='current']) {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.slide[data-pos='before'] {
+  transform: translateX(-4%) scale(0.97);
+}
+
+.slide[data-pos='after'] {
+  transform: translateX(4%) scale(0.97);
+}
+
+/* The frame is as large as the photograph can be inside the area without cropping it. */
+.frame {
+  width: min(100cqw, calc(100cqh * var(--ar)));
+  aspect-ratio: var(--ar);
+  background: #101013;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+}
+
+.frame .image {
+  object-fit: cover;
+}
+
+/* --- Text and controls -------------------------------------------------------------------- */
+.panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 1.5rem;
+  max-width: var(--max-width);
+  width: 100%;
+  margin: clamp(1rem, 3svh, 2rem) auto 0;
+  position: relative;
+  z-index: 2;
+  transition: opacity 0.9s ease, transform 1.1s var(--ease-out-expo);
+}
+
+/* While the camera is still flying, the text waits. */
+.panel:not([data-ready]) {
+  opacity: 0;
+  transform: translateY(14px);
+  pointer-events: none;
+}
+
+.info {
+  display: grid;
+  gap: 0.55rem;
+  max-width: 44rem;
+  animation: rise 0.9s var(--ease-out-expo) both;
+}
+
+/* The old text steps back as the camera starts to swing; the new text rises in when it is half way. */
+.info[data-leaving] {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.counter {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  font-family: var(--font-display);
+  font-stretch: 112%;
+  letter-spacing: 0.08em;
+}
+
+.current {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--color-accent-bright);
+}
+
+.total {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-stretch: 112%;
+  font-size: clamp(1.7rem, 1rem + 2.6vw, 3.4rem);
+  line-height: 1;
+  letter-spacing: -0.025em;
+}
+
+.description {
+  max-width: 52ch;
+  font-size: var(--text-lg);
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+.controls {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.step {
+  display: grid;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  font-size: 1.35rem;
+  transition: background 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+}
+
+.step:hover {
+  background: rgba(225, 6, 0, 0.18);
+  border-color: var(--color-accent);
+}
+
+.step[aria-disabled='true'] {
+  opacity: 0.32;
+  cursor: default;
+  pointer-events: none;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+@media (max-width: 720px) {
+  .panel {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.1rem;
+  }
+
+  .controls {
+    justify-content: flex-start;
+  }
+
+  .step {
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slide {
+    transition: opacity 0.2s linear;
+    transform: none !important;
+  }
+
+  .info {
+    animation: none;
+  }
+}
+
+@media (hover: none) {
+  .step:hover {
+    background: none;
+    border-color: rgba(255, 255, 255, 0.28);
+  }
+}

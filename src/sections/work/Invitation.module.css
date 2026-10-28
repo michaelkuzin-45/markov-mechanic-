@@ -1,0 +1,108 @@
+.invitation {
+  padding: clamp(5rem, 11vw, 10rem) var(--gutter);
+  background: radial-gradient(ellipse at 20% 100%, rgba(225, 6, 0, 0.16), transparent 60%), #060607;
+  border-top: 1px solid var(--color-border);
+  overflow: clip;
+}
+
+.inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: end;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-stretch: 125%;
+  text-transform: uppercase;
+  font-size: clamp(2.6rem, 1rem + 6.2vw, 7rem);
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+}
+
+.line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+}
+
+.word {
+  display: block;
+}
+
+.accent {
+  color: var(--color-accent-bright);
+}
+
+.side {
+  display: grid;
+  gap: 1rem;
+}
+
+.question {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-stretch: 100%;
+  font-size: clamp(1.3rem, 1rem + 1vw, 1.8rem);
+  line-height: 1.2;
+}
+
+.body {
+  max-width: 40ch;
+  font-size: var(--text-lg);
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+.state {
+  margin-top: 0.6rem;
+  padding: 1.1rem 1.25rem 1.25rem;
+  border: 1px dashed rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.stateTitle {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-stretch: 100%;
+  font-size: 1.1rem;
+}
+
+.stateCopy {
+  margin: 0.4rem 0 1rem;
+  font-size: var(--text-sm);
+  line-height: 1.55;
+  color: var(--color-text-muted);
+}
+
+.disabled {
+  padding: 0.65rem 1rem;
+  border: 1px solid var(--color-border);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
+.action {
+  display: inline-block;
+  margin-top: 0.6rem;
+  padding: 0.9rem 1.5rem;
+  border: 1px solid var(--color-accent);
+  font-weight: 500;
+  transition: background 0.2s ease;
+}
+
+.action:hover {
+  background: rgba(225, 6, 0, 0.18);
+}
+
+@media (max-width: 859px) {
+  .inner {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+  }
+}

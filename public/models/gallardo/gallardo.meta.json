@@ -1,0 +1,311 @@
+{
+ "corners": {
+  "FL": {
+   "node": "Corner_FL",
+   "spin": "Spin_FL",
+   "hub": [
+    1.2733,
+    0.3254,
+    -0.6919
+   ],
+   "radius": 0.3253,
+   "steers": true,
+   "recentredCm": {
+    "rim": -4.3,
+    "tire": -2.1,
+    "disc": -4.1
+   }
+  },
+  "FR": {
+   "node": "Corner_FR",
+   "spin": "Spin_FR",
+   "hub": [
+    1.2733,
+    0.3254,
+    0.6888
+   ],
+   "radius": 0.3253,
+   "steers": true,
+   "recentredCm": {
+    "rim": 5.2,
+    "tire": 3.1,
+    "disc": 5.0
+   }
+  },
+  "RL": {
+   "node": "Corner_RL",
+   "spin": "Spin_RL",
+   "hub": [
+    -1.2623,
+    0.3254,
+    -0.6792
+   ],
+   "radius": 0.3253,
+   "steers": false,
+   "recentredCm": {
+    "rim": 0.6,
+    "tire": 0.6,
+    "disc": 0.6
+   }
+  },
+  "RR": {
+   "node": "Corner_RR",
+   "spin": "Spin_RR",
+   "hub": [
+    -1.2623,
+    0.3254,
+    0.6889
+   ],
+   "radius": 0.3253,
+   "steers": false,
+   "recentredCm": {
+    "rim": 0.6,
+    "tire": 0.6,
+    "disc": 0.6
+   }
+  }
+ },
+ "doors": {
+  "L": {
+   "node": "Door_L",
+   "pivot": [
+    0.8389,
+    0.0,
+    -0.9047
+   ],
+   "axis": [
+    0,
+    1,
+    0
+   ],
+   "openDeg": -60,
+   "size": [
+    1.273,
+    0.214,
+    0.659
+   ]
+  },
+  "R": {
+   "node": "Door_R",
+   "pivot": [
+    0.8389,
+    0.0,
+    0.9049
+   ],
+   "axis": [
+    0,
+    1,
+    0
+   ],
+   "openDeg": 60,
+   "size": [
+    1.273,
+    0.214,
+    0.659
+   ]
+  }
+ },
+ "steeringWheel": {
+  "node": "SteeringWheel",
+  "pivot": [
+   0.4925,
+   0.7529,
+   -0.3571
+  ],
+  "axis": [
+   0.9149,
+   -0.4036,
+   -0.0066
+  ]
+ },
+ "anchors": {
+  "headlightL": [
+   1.7726,
+   0.6198,
+   -0.6993
+  ],
+  "headlightR": [
+   1.7726,
+   0.6198,
+   0.6993
+  ],
+  "rearLightL": [
+   -1.7901,
+   0.8101,
+   -0.6185
+  ],
+  "rearLightR": [
+   -1.7901,
+   0.8101,
+   0.6185
+  ],
+  "exhaustL": [
+   -1.9057,
+   0.3852,
+   -0.5733
+  ],
+  "exhaustR": [
+   -1.9057,
+   0.3852,
+   0.5733
+  ],
+  "engineCover": [
+   -1.2361,
+   0.8654,
+   -0.0007
+  ],
+  "hood": [
+   1.7253,
+   0.6539,
+   -0.0005
+  ],
+  "seats": [
+   0.2556,
+   0.3195,
+   -0.0
+  ],
+  "dashboard": [
+   1.109,
+   0.6313,
+   -0.0
+  ],
+  "gauges": [
+   0.826,
+   0.7645,
+   -0.3544
+  ],
+  "wing": [
+   -1.817,
+   0.8913,
+   -0.0001
+  ],
+  "roof": [
+   0.0431,
+   1.1108,
+   -0.0007
+  ],
+  "doorHandleL": [
+   -0.3268,
+   0.6617,
+   -0.9061
+  ],
+  "doorHandleR": [
+   -0.3268,
+   0.6617,
+   0.9061
+  ]
+ },
+ "source": {
+  "blend": "markov-gallardo.blend",
+  "collection": "MKV_Gallardo",
+  "sha256": "148f38b53d0f1144"
+ },
+ "license": {
+  "name": "CC0 1.0",
+  "origin": "Blend Swap #81248 \"Gallardo 2006 Yellow\"",
+  "attribution": "not required (voluntary credit: Pranavjit for the steering-wheel and hood logo, CGAlpha for the leather texture; neither asset is exported)",
+  "notes": "Embedded gauge/radio photographs and logos are not exported. \"Lamborghini\" and the bull are trademarks: do not imply affiliation."
+ },
+ "frame": {
+  "up": "+Y",
+  "front": "+X",
+  "left": "-Z",
+  "groundY": 0,
+  "rollForward": "rotate Spin_* about Z by a negative angle",
+  "steerLeft": "rotate Corner_F* about Y by a positive angle"
+ },
+ "lods": {
+  "lod0": {
+   "file": "gallardo-lod0.glb",
+   "bytes": 1049052,
+   "triangles": 193954,
+   "nodes": 34,
+   "meshes": 22,
+   "materials": 28,
+   "byClass": {
+    "rim": {
+     "source": 55160,
+     "exported": 30336
+    },
+    "tire": {
+     "source": 264384,
+     "exported": 31720
+    },
+    "disc": {
+     "source": 70400,
+     "exported": 15487
+    },
+    "caliper": {
+     "source": 5568,
+     "exported": 5568
+    },
+    "door": {
+     "source": 8972,
+     "exported": 8972
+    },
+    "glass": {
+     "source": 2252,
+     "exported": 2252
+    },
+    "interior": {
+     "source": 89066,
+     "exported": 40071
+    },
+    "body": {
+     "source": 54596,
+     "exported": 54596
+    },
+    "exhaust": {
+     "source": 16536,
+     "exported": 4959
+    }
+   }
+  },
+  "lod1": {
+   "file": "gallardo-lod1.glb",
+   "bytes": 719512,
+   "triangles": 135989,
+   "nodes": 34,
+   "meshes": 22,
+   "materials": 28,
+   "byClass": {
+    "rim": {
+     "source": 55160,
+     "exported": 24819
+    },
+    "tire": {
+     "source": 264384,
+     "exported": 18503
+    },
+    "disc": {
+     "source": 70400,
+     "exported": 9151
+    },
+    "caliper": {
+     "source": 5568,
+     "exported": 4449
+    },
+    "door": {
+     "source": 8972,
+     "exported": 7624
+    },
+    "glass": {
+     "source": 2252,
+     "exported": 2252
+    },
+    "interior": {
+     "source": 89066,
+     "exported": 17883
+    },
+    "body": {
+     "source": 54596,
+     "exported": 46379
+    },
+    "exhaust": {
+     "source": 16536,
+     "exported": 4959
+    }
+   }
+  }
+ }
+}

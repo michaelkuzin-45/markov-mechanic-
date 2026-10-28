@@ -1,0 +1,19 @@
+.wrap {
+  position: absolute;
+  inset: 0;
+}
+
+/* Vertical swipes scroll the page; horizontal drags turn the car. */
+.canvas {
+  touch-action: pan-y;
+  cursor: grab;
+}
+
+.canvas:active {
+  cursor: grabbing;
+}
+
+.canvas canvas:focus-visible {
+  outline: 2px solid var(--color-accent-bright);
+  outline-offset: -4px;
+}

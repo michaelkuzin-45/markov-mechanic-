@@ -1,0 +1,53 @@
+/* Design tokens — single source of truth for color, type and spacing. */
+:root {
+  /* Surfaces */
+  --color-bg: #060607;
+  --color-bg-elevated: #0e0e10;
+  --color-surface: rgba(255, 255, 255, 0.04);
+  --color-border: rgba(255, 255, 255, 0.1);
+
+  /* Text */
+  --color-text: #f2f0ed;
+  --color-text-muted: rgba(242, 240, 237, 0.62);
+  --color-text-faint: rgba(242, 240, 237, 0.38);
+
+  /* Accent — racing red */
+  --color-accent: #e10600;
+  --color-accent-bright: #ff2a1f;
+  --color-accent-glow: rgba(225, 6, 0, 0.45);
+
+  /* Typography */
+  --font-display: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: clamp(1.05rem, 0.95rem + 0.4vw, 1.25rem);
+  --text-display: clamp(3rem, 1.2rem + 7.5vw, 8.5rem);
+
+  --tracking-wide: 0.18em;
+  --tracking-widest: 0.32em;
+
+  /* Layout */
+  --gutter: clamp(1rem, 0.5rem + 2.5vw, 3rem);
+  --header-height: 76px;
+  --max-width: 1440px;
+
+  /* Motion */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast: 200ms;
+  --duration-base: 450ms;
+
+  /* Stacking */
+  --z-canvas: 0;
+  --z-content: 10;
+  --z-header: 100;
+  --z-menu: 200;
+}
+
+@media (max-width: 720px) {
+  :root {
+    --header-height: 64px;
+  }
+}

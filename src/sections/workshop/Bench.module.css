@@ -1,0 +1,188 @@
+.bench {
+  position: relative;
+  padding: clamp(4rem, 9vw, 8rem) var(--gutter);
+  background: #0b0b0d;
+  border-top: 1px solid var(--color-border);
+}
+
+.inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+
+.head {
+  display: grid;
+  gap: 1rem;
+  max-width: 44rem;
+  margin-bottom: clamp(2rem, 4vw, 3.5rem);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-stretch: 108%;
+  font-size: clamp(2.4rem, 1.4rem + 3.6vw, 4.5rem);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+}
+
+.lead {
+  max-width: 52ch;
+  font-size: var(--text-lg);
+  line-height: 1.55;
+  color: var(--color-text-muted);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
+  gap: clamp(1.5rem, 3vw, 3rem);
+  align-items: start;
+}
+
+.main {
+  margin: 0;
+}
+
+.frame {
+  position: relative;
+  line-height: 0;
+}
+
+.frame img,
+.strip img {
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--color-border);
+}
+
+.caption {
+  margin-top: 0.65rem;
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+/* --- Callouts on the photograph --------------------------------------------- */
+.callout {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  margin: -22px 0 0 -22px;
+  line-height: 1;
+}
+
+.calloutDot {
+  position: absolute;
+  inset: 12px;
+  border: 1.5px solid rgba(242, 240, 237, 0.9);
+  border-radius: 50%;
+  background: rgba(6, 6, 7, 0.45);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.calloutDot::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  background: var(--color-accent-bright);
+}
+
+.calloutLabel {
+  position: absolute;
+  left: calc(100% - 8px);
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 0.3rem 0.6rem;
+  background: rgba(6, 6, 7, 0.88);
+  border-left: 2px solid var(--color-accent);
+  font-size: var(--text-xs);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.callout[data-active] .calloutDot {
+  transform: scale(1.3);
+}
+
+.callout[data-active] .calloutLabel {
+  opacity: 1;
+}
+
+/* --- Side column ------------------------------------------------------------ */
+.side {
+  display: grid;
+  gap: 1rem;
+}
+
+.sideTitle {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-stretch: 100%;
+  font-size: 1.5rem;
+  letter-spacing: -0.015em;
+}
+
+.sideCopy {
+  max-width: 44ch;
+  line-height: 1.6;
+  color: var(--color-text-muted);
+}
+
+.legend {
+  display: grid;
+  margin: 0.25rem 0 0.75rem;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--color-border);
+}
+
+.legend li {
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--color-border);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  transition: color 0.2s ease, padding-left 0.25s var(--ease-out-expo);
+}
+
+.legend li[data-active] {
+  padding-left: 0.6rem;
+  color: var(--color-text);
+  border-left: 2px solid var(--color-accent);
+}
+
+.strip {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 2rem);
+  margin-top: clamp(2rem, 4vw, 3.5rem);
+}
+
+.strip figure {
+  margin: 0;
+}
+
+.strip img {
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+}
+
+@media (max-width: 959px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* Labels stay hidden on small screens; the legend below the photo names every part. */
+  .calloutLabel {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .strip {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

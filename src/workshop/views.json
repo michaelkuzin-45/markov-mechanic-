@@ -1,0 +1,12 @@
+{
+  "_doc": "Camera views shared by the live 3D stage (three coordinates: +Y up, +X front, left side is -Z) and the Blender stills (blender/scripts/render_workshop_stills.py). fov is vertical degrees, shift moves the car right on wide layouts (fraction of width), doors are opening angles for the left and right door, steer is the front-wheel angle in degrees.",
+  "views": {
+    "overview": { "pos": [4.9, 1.55, -4.5], "target": [-0.1, 0.52, 0], "fov": 30, "shift": 0.17, "doors": [0, 0], "steer": 0, "lights": true },
+    "overviewOff": { "pos": [4.9, 1.55, -4.5], "target": [-0.1, 0.52, 0], "fov": 30, "shift": 0.17, "doors": [0, 0], "steer": 0, "lights": false },
+    "wheels": { "pos": [3.1, 0.55, -2.6], "target": [1.15, 0.34, -0.75], "fov": 30, "shift": 0.15, "doors": [0, 0], "steer": 14, "lights": true },
+    "brake": { "pos": [2.2, 0.42, -1.75], "target": [1.27, 0.33, -0.8], "fov": 17, "shift": 0.14, "doors": [0, 0], "steer": 0, "lights": true },
+    "cabin": { "pos": [3.1, 1.95, -4.2], "target": [0.3, 0.62, -0.5], "fov": 34, "shift": 0.17, "doors": [62, 0], "steer": 0, "lights": true },
+    "rear": { "pos": [-4.3, 1.25, -3.2], "target": [-1.5, 0.6, 0], "fov": 29, "shift": 0.17, "doors": [0, 0], "steer": 0, "lights": true },
+    "engine": { "pos": [-3.2, 2.5, -2.4], "target": [-1.2, 0.8, 0], "fov": 30, "shift": 0.17, "doors": [0, 0], "steer": 0, "lights": true }
+  }
+}
