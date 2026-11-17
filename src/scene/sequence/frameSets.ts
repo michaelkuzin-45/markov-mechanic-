@@ -11,6 +11,10 @@ export interface FrameSet {
   url: (index: number) => string
 }
 
+/**
+ * Served from /hero-clean: the same renders with the thin white display-panel line that was baked into them (a laser-like bar behind the car)
+ * painted out (scripts/remove-baked-lines.mjs). The untouched originals stay in /hero; point these two urls back there to restore them.
+ */
 const pad = (i: number) => String(i).padStart(3, '0')
 
 export const frameSets: Record<FrameSet['id'], FrameSet> = {
@@ -19,14 +23,14 @@ export const frameSets: Record<FrameSet['id'], FrameSet> = {
     count: 96,
     width: 1600,
     height: 900,
-    url: (i) => `/hero/desktop/frame_${pad(i)}.webp`,
+    url: (i) => `/hero-clean/desktop/frame_${pad(i)}.webp`,
   },
   mobile: {
     id: 'mobile',
     count: 72,
     width: 720,
     height: 1280,
-    url: (i) => `/hero/mobile/frame_${pad(i)}.webp`,
+    url: (i) => `/hero-clean/mobile/frame_${pad(i)}.webp`,
   },
 }
 

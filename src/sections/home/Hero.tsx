@@ -8,7 +8,6 @@ import { destinations } from '@/config/destinations'
 import { usePrefersReducedMotion } from '@/hooks/useMediaQuery'
 import { FrameSequencePlayer } from '@/scene/sequence/FrameSequencePlayer'
 import { frameSets, isConstrainedDevice, pickFrameSet, type FrameSet } from '@/scene/sequence/frameSets'
-import { StreakField } from '@/scene/streaks/StreakField'
 import { FloatingNavCards } from '@/components/FloatingNavCards/FloatingNavCards'
 import styles from './Hero.module.css'
 
@@ -36,23 +35,16 @@ function beatValue(p: number, [a, b, c, d]: number[]) {
   return 0
 }
 
-/** Streak strength along the camera move: calm on the hero shot, peaking over the roof. */
-function streakIntensity(cam: number) {
-  const ramp = Math.min(1, cam / 0.12)
-  const overhead = Math.exp(-(((cam - 0.6) / 0.16) ** 2))
-  return ramp * (0.55 + 0.75 * overhead)
-}
-
 /**
  * Homepage hero: a pre-rendered Blender camera move around the car, scrubbed
- * by scroll and fully reversible, with light streaks flying past and the
- * floating navigation cards at the end. The section is several screens tall;
+ * by scroll and fully reversible, with the three captions and the
+ * floating navigation cards at the end. (The light streaks that used to fly
+ * past were removed on request; everything else is unchanged.) The section is several screens tall;
  * its sticky inner frame holds the canvas and overlays.
  */
 export function Hero() {
   const sectionRef = useRef<HTMLElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const streakRef = useRef<HTMLCanvasElement>(null)
   const railRef = useRef<HTMLSpanElement>(null)
   const reducedMotion = usePrefersReducedMotion()
   const [ready, setReady] = useState(false)
@@ -62,8 +54,7 @@ export function Hero() {
     if (reducedMotion) return
     const section = sectionRef.current
     const canvas = canvasRef.current
-    const streakCanvas = streakRef.current
-    if (!section || !canvas || !streakCanvas) return
+    if (!section || !canvas) return
 
     const constrained = isConstrainedDevice()
     let set: FrameSet = pickFrameSet(window.innerWidth, window.innerHeight)
@@ -77,8 +68,6 @@ export function Hero() {
       return p
     }
     let player = makePlayer(set)
-    const streaks = new StreakField(streakCanvas, constrained ? 14 : 28)
-
     let target = 0
     let current = 0
     const trigger = ScrollTrigger.create({
@@ -102,17 +91,13 @@ export function Hero() {
     let last = performance.now()
     let display = current
     let still = 0
-    let velocity = 0
     let cardsOn = false
     const tick = (now: number) => {
       const dt = Math.min((now - last) / 1000, 0.1)
       last = now
       // Ease toward the scroll position: smooth, never lags far behind.
-      const prev = current
       current += (target - current) * (1 - Math.exp(-8 * dt))
       if (Math.abs(target - current) < 1e-4) current = target
-      velocity += ((current - prev) / Math.max(dt, 1e-3) - velocity) * Math.min(1, dt * 10)
-      if (Math.abs(velocity) < 1e-4) velocity = 0
 
       const cam = Math.min(1, current / CAMERA_END)
       // While moving, neighbouring frames cross-fade (soft motion). Once the
@@ -127,12 +112,6 @@ export function Hero() {
         display = cam
       }
       player.draw(display)
-
-      streaks.draw({
-        distance: current * 6,
-        velocity: (velocity * 6) / 1.5,
-        intensity: current > CARDS_AT ? 0.35 : streakIntensity(cam),
-      })
 
       if (railRef.current) railRef.current.style.transform = `scaleY(${current.toFixed(4)})`
       for (const beat of beats) {
@@ -154,7 +133,6 @@ export function Hero() {
     raf = requestAnimationFrame(tick)
 
     const onResize = () => {
-      streaks.resize()
       const next = pickFrameSet(window.innerWidth, window.innerHeight)
       if (next.id !== set.id) {
         player.dispose()
@@ -193,7 +171,6 @@ export function Hero() {
         )}
 
         <div className={styles.vignette} aria-hidden="true" />
-        {!staticMode && <canvas ref={streakRef} className={styles.streaks} aria-hidden="true" />}
         {!staticMode && <div className={styles.dim} data-beat={DIM_BEAT} data-lift="0" aria-hidden="true" />}
 
         <div className={styles.content} data-beat={staticMode ? undefined : INTRO_BEAT}>

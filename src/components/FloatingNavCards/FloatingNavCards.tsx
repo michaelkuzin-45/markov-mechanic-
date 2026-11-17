@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties, type MouseEvent, type PointerEvent } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { usePrefersReducedMotion } from '@/hooks/useMediaQuery'
-import { StreakField } from '@/scene/streaks/StreakField'
 import styles from './FloatingNavCards.module.css'
 
 export interface NavCardItem {
@@ -38,7 +37,6 @@ export function FloatingNavCards({ items, visible = true, still = false, label =
   const reducedMotion = usePrefersReducedMotion()
   const navigate = useNavigate()
   const [launching, setLaunching] = useState<number | null>(null)
-  const tunnelRef = useRef<HTMLCanvasElement>(null)
   const timers = useRef<number[]>([])
   const calm = still || reducedMotion
 
@@ -66,7 +64,6 @@ export function FloatingNavCards({ items, visible = true, still = false, label =
     if (launching !== null) return
     e.currentTarget.style.transform = ''
     setLaunching(i)
-    runTunnel(tunnelRef.current)
     timers.current.push(window.setTimeout(() => navigate(path, { state: { launched: true } }), LAUNCH_MS))
   }
 
@@ -117,23 +114,8 @@ export function FloatingNavCards({ items, visible = true, still = false, label =
       {!calm && (
         <>
           <div className={styles.blackout} data-active={launching !== null || undefined} aria-hidden="true" />
-          <canvas ref={tunnelRef} className={styles.tunnel} data-active={launching !== null || undefined} aria-hidden="true" />
         </>
       )}
     </div>
   )
-}
-
-/** A short burst of streaks rushing past the viewer (the click transition). */
-function runTunnel(canvas: HTMLCanvasElement | null) {
-  if (!canvas) return
-  const field = new StreakField(canvas, 34, 11)
-  const start = performance.now()
-  const tick = (now: number) => {
-    const t = Math.min(1, (now - start) / LAUNCH_MS)
-    // Accelerate hard: distance grows with t^2, speed ramps with t.
-    field.draw({ distance: t * t * 2.4, velocity: 1.2 + t * 3, intensity: 0.6 + t * 1.2 })
-    if (t < 1) requestAnimationFrame(tick)
-  }
-  requestAnimationFrame(tick)
 }
